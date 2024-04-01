@@ -1,16 +1,14 @@
 # 使用 Python 官方映像作為基礎映像
 FROM python:3.9-slim
 
-# 設置工作目錄
 WORKDIR /app
 
-COPY requirements.txt ./
+COPY . /app
 
-RUN pip install --no-cache-dir -r requirements.txt
-
-
-# 複製整個應用程式代碼到容器中
-COPY . .
+# 安裝依賴項，目前不清楚要pywin32如何在docker使用，Pipfile裡面先移除，程式裡面abom有使用到的所有也都先移除
+RUN pip install pipenv
+COPY Pipfile Pipfile.lock /app/
+RUN pipenv install --deploy --system
 
 # 開放容器的端口
 EXPOSE 5000
